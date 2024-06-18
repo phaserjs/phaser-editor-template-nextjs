@@ -1,0 +1,8 @@
+{
+    "plugins": [],
+    "scripts": [],
+    "skip": [
+        "dist"
+    ],
+    "playUrl": "http://localhost:8080"
+}
