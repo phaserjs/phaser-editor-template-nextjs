@@ -99,3 +99,4 @@ export default class MainMenu extends Phaser.Scene {
 /* END OF COMPILED CODE */
 
 // You can write more code here
+export { MainMenu };
