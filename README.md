@@ -6,7 +6,7 @@ This is a Phaser Editor v4 project template that uses {template-name} for bundli
 
 This template has been updated for:
 
-- [Phaser {phaser-version}](https://github.com/phaserjs/phaser)
+- [Phaser 3.80.1](https://github.com/phaserjs/phaser)
 - Phaser Editor v4.0 and above
 
 ![screenshot](screenshot.png)
