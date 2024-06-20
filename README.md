@@ -1,20 +1,27 @@
-# Phaser Next.js Template
+# Phaser Editor Angular Template
 
-This is a Phaser 3 project template that uses the Next.js framework. It includes a bridge for React to Phaser game communication, hot-reloading for quick development workflow and scripts to generate production-ready builds.
+This is a Phaser Editor v4 project template that uses Bun for bundling. It supports hot-reloading for quick development workflow and includes scripts to generate production-ready builds.
 
 ### Versions
 
 This template has been updated for:
 
-- [Phaser 3.80.1](https://github.com/phaserjs/phaser)
-- [Next.js 14.2.3](https://github.com/vercel/next.js)
-- [TypeScript 5](https://github.com/microsoft/TypeScript)
+- [Phaser {phaser-version}](https://github.com/phaserjs/phaser)
+- Phaser Editor v4.0 and above
 
 ![screenshot](screenshot.png)
+
+## What is Phaser Editor?
+
+Phaser Editor enables you to visually create Phaser games. Instead of entering numbers in your code to position Game Objects, you can drag and drop them into place, tweak their animations, adjust their physics bodies, enable special effects, and more. It's quicker and faster for both artists and developers alike and publishes pure Phaser code.
+
+See more at [phaser.io](https://phaser.io/editor)
 
 ## Requirements
 
 [Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.
+
+An active subscription to Phaser Editor is required to load and use this template within it.
 
 ## Available Commands
 
@@ -26,145 +33,47 @@ This template has been updated for:
 
 ## Writing Code
 
-After cloning the repo, run `npm install` from your project directory. Then, you can start the local development server by running `npm run dev`.
+After cloning the repo, run `npm install` from your project directory.
 
-The local development server runs on `http://localhost:8080` by default. Please see the Next.js documentation if you wish to change this, or add SSL support.
-
-Once the server is running you can edit any of the files in the `src` folder. Next.js will automatically recompile your code and then reload the browser.
-
-## Template Project Structure
-
-We have provided a default project structure to get you started. This is as follows:
-
-- `src/pages/_document.tsx` - A basic Next.js component entry point. It is used to define the `<html>` and `<body>` tags and other globally shared UI.
-- `src` - Contains the Next.js client source code.
-- `src/styles/globals.css` - Some simple global CSS rules to help with page layout. You can enable Tailwind CSS here.
-- `src/page/_app.tsx` - The main Next.js component.
-- `src/App.tsx` - Midleware component used to run Phaser in client mode.
-- `src/game/PhaserGame.tsx` - The React component that initializes the Phaser Game and serve like a bridge between React and Phaser.
-- `src/game/EventBus.ts` - A simple event bus to communicate between React and Phaser.
-- `src/game` - Contains the game source code.
-- `src/game/main.tsx` - The main **game** entry point. This contains the game configuration and start the game.
-- `src/game/scenes/` - The Phaser Scenes are in this folder.
-- `public/favicon.png` - The default favicon for the project.
-- `public/assets` - Contains the static assets used by the game.
-## React Bridge
-
-The `PhaserGame.tsx` component is the bridge between React and Phaser. It initializes the Phaser game and passes events between the two.
-
-To communicate between React and Phaser, you can use the **EventBus.js** file. This is a simple event bus that allows you to emit and listen for events from both React and Phaser.
-
-```js
-// In React
-import { EventBus } from './EventBus';
-
-// Emit an event
-EventBus.emit('event-name', data);
-
-// In Phaser
-// Listen for an event
-EventBus.on('event-name', (data) => {
-    // Do something with the data
-});
-```
-
-In addition to this, the `PhaserGame` component exposes the Phaser game instance along with the most recently active Phaser Scene using React forwardRef.
-
-Once exposed, you can access them like any regular react reference.
-
-## Phaser Scene Handling
-
-In Phaser, the Scene is the lifeblood of your game. It is where you sprites, game logic and all of the Phaser systems live. You can also have multiple scenes running at the same time. This template provides a way to obtain the current active scene from React.
-
-You can get the current Phaser Scene from the component event `"current-active-scene"`. In order to do this, you need to emit the event `"current-scene-ready"` from the Phaser Scene class. This event should be emitted when the scene is ready to be used. You can see this done in all of the Scenes in our template.
-
-**Important**: When you add a new Scene to your game, make sure you expose to React by emitting the `"current-scene-ready"` event via the `EventBus`, like this:
-
-
-```ts
-class MyScene extends Phaser.Scene
-{
-    constructor ()
-    {
-        super('MyScene');
-    }
-
-    create ()
-    {
-        // Your Game Objects and logic here
-
-        // At the end of create method:
-        EventBus.emit('current-scene-ready', this);
-    }
-}
-```
-
-You don't have to emit this event if you don't need to access the specific scene from React. Also, you don't have to emit it at the end of `create`, you can emit it at any point. For example, should your Scene be waiting for a network request or API call to complete, it could emit the event once that data is ready.
-
-### React Component Example
-
-Here's an example of how to access Phaser data for use in a React Component:
-
-```ts
-import { useRef } from 'react';
-import { IRefPhaserGame } from "./game/PhaserGame";
-
-// In a parent component
-const ReactComponent = () => {
-
-    const phaserRef = useRef<IRefPhaserGame>(); // you can access to this ref from phaserRef.current
-
-    const onCurrentActiveScene = (scene: Phaser.Scene) => {
-    
-        // This is invoked
-
-    }
-
-    return (
-        ...
-        <PhaserGame ref={phaserRef} currentActiveScene={onCurrentActiveScene} />
-        ...
-    );
-
-}
-```
-
-In the code above, you can get a reference to the current Phaser Game instance and the current Scene by creating a reference with `useRef()` and assign to PhaserGame component.
-
-From this state reference, the game instance is available via `phaserRef.current.game` and the most recently active Scene via `phaserRef.current.scene`.
-
-The `onCurrentActiveScene` callback will also be invoked whenever the the Phaser Scene changes, as long as you emit the event via the EventBus, as outlined above.
-
-## Handling Assets
-
-To load your static games files such as audio files, images, videos, etc place them into the `public/assets` folder. Then you can use this path in the Loader calls within Phaser:
-
-```js
-preload ()
-{
-    //  This is an example of loading a static image
-    //  from the public/assets folder:
-    this.load.image('background', 'assets/bg.png');
-}
-```
-
-When you issue the `npm run build` command, all static assets are automatically copied to the `dist/assets` folder.
+To start the local development server use `npm run dev`.
 
 ## Deploying to Production
 
-After you run the `npm run build` command, your code will be built into a single bundle and saved to the `dist` folder, along with any other assets your project imported, or stored in the public assets folder.
+To create a production build use the command `npm run build`.
 
-In order to deploy your game, you will need to upload *all* of the contents of the `dist` folder to a public facing web server.
+This will take your game code and build it into a single bundle, ready for deployment. This bundle is saved to the `dist` folder. Please note that some templates save to the `build` folder instead. The deployment script will also copy any assets your project imported, or stored in the public assets folder.
 
-## Customizing the Template
+To deploy your game, upload *all* of the contents of the `dist` folder to a public-facing web server.
 
-### Next.js
+**Note:** In some templates, the `dist` folder has been renamed to `build` to remain within that framework's conventions.
 
-If you want to customize your build, such as adding plugin (i.e. for loading CSS or fonts), you can modify the `next.config.mjs` file for cross-project changes, or you can modify and/or create new configuration files and target them in specific npm tasks inside of `package.json`. Please see the [Next.js documentation](https://nextjs.org/docs) for more information.
+## Phaser Editor considerations
+
+### Excluding files from the project
+
+You don't want to add every file in this template to your Phaser Editor project. For example, the whole of `node_modules` can be excluded.
+
+The `/.skip` file lists the folders and files to exclude from the editor's project.
+
+[Learn more about resource filtering in Phaser Editor](https://phaser.io/editor/docs/misc/resources-filtering)
+
+### Asset Pack
+
+Phaser has the ability to load what are known as 'asset packs'. These are JSON files that describe all of the content that your game needs to load, such as images, audio, and fonts. Phaser Editor will generate and use asset packs intensively and tools such as the Scene Editor depend upon the information stored in the asset pack files.
+
+You can have multiple asset packs per project, which is the recommended practice for larger games, allowing you to load only the pack of assets the game requires at that specific point.
+
+In this template, we have pre-configured two types of asset packs: `boot-asset-pack.json` and `preload-asset-pack.json`.
+
+The `boot-asset-pack.json` file is used to load assets when the game first boots. Typically, you would store a small selection of initial assets in here, such as a loading screen image and progress bar.
+
+The `preload-asset-pack.json` in this template contains the rest of the assets the game needs. You are free to create additional packs as required, but for the sake of simplicity, this template has been configured with just these two packs.
+
+[Learn more about Asset Pack loading in Phaser](https://newdocs.phaser.io/docs/3.80.0/Phaser.Loader.LoaderPlugin#pack)
 
 ## Join the Phaser Community!
 
-We love to see what developers like you create with Phaser! It really motivates us to keep improving. So please join our community and show-off your work 😄
+We love to see what developers like you create with Phaser! It really motivates us to keep improving. So please join our community and show off your work 😄
 
 **Visit:** The [Phaser website](https://phaser.io) and follow on [Phaser Twitter](https://twitter.com/phaser_)<br />
 **Play:** Some of the amazing games [#madewithphaser](https://twitter.com/search?q=%23madewithphaser&src=typed_query&f=live)<br />
