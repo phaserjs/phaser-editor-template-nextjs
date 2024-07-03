@@ -15,7 +15,7 @@
         {
             "type": "Image",
             "id": "1cb7aa2a-0c09-4135-a34b-4da58adb90a2",
-            "label": "image_56ba42f5-7d7b-4134-a21e-85c51411440a",
+            "label": "background",
             "texture": {
                 "key": "background"
             },
