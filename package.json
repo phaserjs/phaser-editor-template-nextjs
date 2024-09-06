@@ -1,5 +1,5 @@
 {
-    "name": "template-nextjs",
+    "name": "phaser-editor-template-nextjs",
     "version": "1.1.1",
     "description": "A Phaser 3 Next.js project template that demonstrates Next.js with React communication and uses Vite for bundling.",
     "repository": {
