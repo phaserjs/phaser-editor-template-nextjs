@@ -6,7 +6,7 @@ This is a Phaser Editor v4 project template that uses Nextjs for bundling. It su
 
 This template has been updated for:
 
-- [Phaser 3.80.1](https://github.com/phaserjs/phaser)
+- [Phaser 3.85.0](https://github.com/phaserjs/phaser)
 - Phaser Editor v4.0 and above
 
 ![screenshot](screenshot.png)
