@@ -1,57 +1,36 @@
-/* START OF COMPILED CODE */
-
-import Phaser from "phaser";
-/* START-USER-IMPORTS */
 import { EventBus } from '../EventBus';
-/* END-USER-IMPORTS */
+import { Scene } from 'phaser';
 
-export default class Game extends Phaser.Scene {
+export class Game extends Scene
+{
+    camera: Phaser.Cameras.Scene2D.Camera;
+    background: Phaser.GameObjects.Image;
+    gameText: Phaser.GameObjects.Text;
 
-	constructor() {
-		super("Game");
+    constructor ()
+    {
+        super('Game');
+    }
 
-		/* START-USER-CTR-CODE */
-		// Write your code here.
-		/* END-USER-CTR-CODE */
-	}
+    create ()
+    {
+        this.camera = this.cameras.main;
+        this.camera.setBackgroundColor(0x00ff00);
 
-	editorCreate(): void {
+        this.background = this.add.image(512, 384, 'background');
+        this.background.setAlpha(0.5);
 
-		// background
-		const background = this.add.image(512, 384, "background");
-		background.alpha = 0.5;
-
-		// text
-		const text = this.add.text(513, 384, "", {});
-		text.setOrigin(0.5, 0.5);
-		text.text = "Make something fun!\nand share it with us:\nsupport@phaser.io";
-		text.setStyle({ "align": "center", "color": "#ffffff", "fontFamily": "Arial Black", "fontSize": "38px", "stroke": "#000000", "strokeThickness":8});
-
-		this.events.emit("scene-awake");
-	}
-
-	/* START-USER-CODE */
-
-	// Write your code here
-
-	create() {
-
-        this.editorCreate();
-
-        this.cameras.main.setBackgroundColor(0x00ff00);
+        this.gameText = this.add.text(512, 384, 'Make something fun!\nand share it with us:\nsupport@phaser.io', {
+            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
+            stroke: '#000000', strokeThickness: 8,
+            align: 'center'
+        }).setOrigin(0.5).setDepth(100);
 
         EventBus.emit('current-scene-ready', this);
-
-	}
+    }
 
     changeScene ()
     {
         this.scene.start('GameOver');
     }
-
-	/* END-USER-CODE */
 }
-
-/* END OF COMPILED CODE */
-
-// You can write more code here

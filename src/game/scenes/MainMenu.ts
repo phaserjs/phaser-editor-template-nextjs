@@ -1,54 +1,34 @@
-// You can write more code here
+import { GameObjects, Scene } from 'phaser';
 
-/* START OF COMPILED CODE */
-
-import Phaser from "phaser";
-/* START-USER-IMPORTS */
 import { EventBus } from '../EventBus';
-/* END-USER-IMPORTS */
 
-export default class MainMenu extends Phaser.Scene {
-
-	constructor() {
-		super("MainMenu");
-
-		/* START-USER-CTR-CODE */
-		// Write your code here.
-		/* END-USER-CTR-CODE */
-	}
-
-	editorCreate(): void {
-
-		// background
-		this.add.image(512, 384, "background");
-
-		// logo
-		const logo = this.add.image(512, 384, "logo");
-
-		// text
-		const text = this.add.text(512, 460, "", {});
-		text.setOrigin(0.5, 0.5);
-		text.text = "Main Menu";
-		text.setStyle({ "align": "center", "color": "#ffffff", "fontFamily": "Arial Black", "fontSize": "38px", "stroke": "#000000", "strokeThickness":8});
-
-		this.logo = logo;
-
-		this.events.emit("scene-awake");
-	}
-
-	private logo!: Phaser.GameObjects.Image;
-
-	/* START-USER-CODE */
+export class MainMenu extends Scene
+{
+    background: GameObjects.Image;
+    logo: GameObjects.Image;
+    title: GameObjects.Text;
     logoTween: Phaser.Tweens.Tween | null;
 
-	// Write your code here
+    constructor ()
+    {
+        super('MainMenu');
+    }
+
     create ()
     {
-        this.editorCreate();
+        this.background = this.add.image(512, 384, 'background');
+
+        this.logo = this.add.image(512, 300, 'logo').setDepth(100);
+
+        this.title = this.add.text(512, 460, 'Main Menu', {
+            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
+            stroke: '#000000', strokeThickness: 8,
+            align: 'center'
+        }).setOrigin(0.5).setDepth(100);
 
         EventBus.emit('current-scene-ready', this);
     }
-
+    
     changeScene ()
     {
         if (this.logoTween)
@@ -60,7 +40,7 @@ export default class MainMenu extends Phaser.Scene {
         this.scene.start('Game');
     }
 
-    moveLogo (vueCallback: ({ x, y }: { x: number, y: number }) => void)
+    moveLogo (reactCallback: ({ x, y }: { x: number, y: number }) => void)
     {
         if (this.logoTween)
         {
@@ -82,9 +62,9 @@ export default class MainMenu extends Phaser.Scene {
                 yoyo: true,
                 repeat: -1,
                 onUpdate: () => {
-                    if (vueCallback)
+                    if (reactCallback)
                     {
-                        vueCallback({
+                        reactCallback({
                             x: Math.floor(this.logo.x),
                             y: Math.floor(this.logo.y)
                         });
@@ -93,10 +73,4 @@ export default class MainMenu extends Phaser.Scene {
             });
         }
     }
-    /* END-USER-CODE */
 }
-
-/* END OF COMPILED CODE */
-
-// You can write more code here
-export { MainMenu };
